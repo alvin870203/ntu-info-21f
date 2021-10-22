@@ -1,0 +1,7 @@
+﻿FILE,ANS,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,key_resp_2.keys,key_resp_2.corr,key_resp_2.rt,session,participant,date,expName,frameRate,
+D03.jpg,n,0,0,0,5,n,1,1.4007629999978235,001,alvin_local_pic1_script,2021_Oct_17_0100,animal_detection_pic1,60.0138511992753,
+T02.jpg,y,0,1,1,1,y,1,0.3508861000009347,001,alvin_local_pic1_script,2021_Oct_17_0100,animal_detection_pic1,60.0138511992753,
+T01.jpg,y,0,2,2,0,y,1,0.3178572000033455,001,alvin_local_pic1_script,2021_Oct_17_0100,animal_detection_pic1,60.0138511992753,
+T03.jpg,y,0,3,3,2,y,1,0.5333725999953458,001,alvin_local_pic1_script,2021_Oct_17_0100,animal_detection_pic1,60.0138511992753,
+D02.jpg,n,0,4,4,4,n,1,0.2679712999961339,001,alvin_local_pic1_script,2021_Oct_17_0100,animal_detection_pic1,60.0138511992753,
+D01.jpg,n,0,5,5,3,n,1,0.3842688999866368,001,alvin_local_pic1_script,2021_Oct_17_0100,animal_detection_pic1,60.0138511992753,

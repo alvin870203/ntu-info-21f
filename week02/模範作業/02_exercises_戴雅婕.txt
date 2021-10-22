@@ -1,0 +1,22 @@
+from psychopy import core,visual,event
+import socket,pickle
+
+code='utf-8'
+c=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+c.connect(('hpc.psy.ntu.edu.tw', 1234))
+c.sendall('b09207006'.encode(code))
+print(c.recv(9).decode(code)) # Should show your ID!
+
+w=visual.Window(size=[800,400],units='norm')
+
+for t in range(8):
+  sz=int(c.recv(2).decode(code)) # Recieve 2 bytes information
+  word=pickle.loads(c.recv(sz)) # word inputted as dictionary
+  visual.TextStim(w,text=word['text'], color=word['color']).draw();w.flip()
+  r=event.waitKeys(keyList=['r','g','b','y'],timeStamped=core.Clock()) #start recording when the word shows; record every key-in moment.
+  c.sendall(pickle.dumps(r[0]))#將r[0]存為只有python認識的字串
+
+print(c.recv(5).decode(code)) # server will tell you whether you pass or not
+c.close()
+
+#The bias of this exp:keyboard language mode trasferfing & unfamiliar to the bottoms' locations.
