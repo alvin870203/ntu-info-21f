@@ -1,0 +1,26 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js">
+</script>
+
+<div data-role="page" id="p1">
+ <div data-role="header"><h1>Header</h1></div>
+ Hello from page 1
+ <a href="#p2" class="ui-btn">Next Page</a>
+ <div data-role="footer"><h1>Footer</h1></div>
+</div>
+
+<div data-role="page" id="p2">
+ <form>
+   <label><input type="checkbox">Check me</label>
+   <input id="filter" data-type="search" placeholder="Type to search...">
+   <ul data-role="listview" data-inset="true" data-filter="true" data-input="#filter">
+   <li><a href="http://google.com/search?q=cat">Cat</a></li>
+   <li><a href="http://google.com/search?q=dog">Dog</a></li>
+   <li><a href="http://google.com/search?q=panda">Panda</a></li>
+   </ul>
+   <a href="#p1" class="ui-btn">Previous Page</a>
+ </form>
+</div>
+

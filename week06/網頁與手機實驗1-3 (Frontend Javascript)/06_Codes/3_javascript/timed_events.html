@@ -1,0 +1,12 @@
+<script>
+var t1=new Date().getTime();
+function print(s){
+ var t2=new Date().getTime();
+ deltaT=t2-t1;
+ document.write(deltaT+' '+s+"<br>");
+}
+setTimeout("print('test1');",3000)
+setTimeout("print('test2');",6000)
+var timer=setInterval(function(){print('test3');}, 2000);
+setTimeout("clearInterval(timer)",10000)
+</script>

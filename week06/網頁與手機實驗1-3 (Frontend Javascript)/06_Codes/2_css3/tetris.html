@@ -1,0 +1,937 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tetris CSS3 by Geoffray Warnants</title>
+<meta property="og:url" content="http://lab.geoffray.be/tetris-css3/" />
+<meta property="og:image" content="http://lab.geoffray.be/tetris-css3/tetris-css3.png" />
+<meta property="og:title" content="Tetris CSS3 animation by Geoffray Warnants" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="120" />
+<meta property="og:image:height" content="120" />
+<style>
+/**
+ * Tetris CSS3
+ * http://geoffray.be/lab/tetris-css3
+ *
+ * Author:  Geoffray Warnants (@gwarnants) (http://geoffray.be)
+ * Version: 1.1 20110704
+ */
+
+
+/* -----------------------------------------------------------------
+ *
+ *  Global styles
+ *
+ */
+@font-face {
+    font-family:pixel;
+    src:url('slkscr.ttf');
+}
+body {
+    background:#bfbfbf;
+    background:-moz-linear-gradient(left, #bfbfbf 0%, #8c8c8c 15%, #8c8c8c 85%, #bfbfbf 100%);
+    background:-webkit-linear-gradient(left, #bfbfbf 0%,#8c8c8c 15%,#8c8c8c 85%,#bfbfbf 100%);
+    font-family:pixel;
+    color:#B5B5B5;
+    text-align:center;
+    font-size:16px;
+}
+h1 {
+    font-size:25px;
+    margin:30px 0;
+}
+a {
+    color:#D8D8D8;
+    text-decoration:none;
+}
+a:hover {
+    color:#FFEA01;
+}
+.frame {
+    float:left;
+}
+.v {
+    width:40px;
+}
+.h {
+    height:40px;
+}
+.frame > div {
+    width:0;
+    height:0;
+    border:20px solid #B5B5B5;
+    border-color:#D8D8D8 #B5B5B5 #9B999B #8C8C8C;
+    float:left;
+}
+#scene {
+    margin:10px auto;
+    width:720px;
+    height:640px;
+    border:2px solid #595959;
+    background-color:#595959;
+}
+#game {
+    width:400px;
+    height:560px;
+    position:relative;
+    overflow:hidden;
+    float:left;
+}
+#next {
+    width:200px;
+    height:240px;
+    float:left;
+}
+#cache {
+    position:relative;
+    width:120px;
+    height:160px;
+    overflow:hidden;
+    left:40px;
+    top:40px;
+}
+#blink {
+    position:absolute;
+    width:400px;
+    height:160px;
+    left:0;
+    top:400px;
+    z-index:0;
+}
+#slider {
+    display:none;
+    position:relative;
+    width:120px;
+    height:800px;
+    top:0;
+}
+#info {
+    float:left;
+    width:200px;
+    height:280px;
+}
+
+
+/* -----------------------------------------------------------------
+ *
+ *  Tetromino's
+ *  http://en.wikipedia.org/wiki/Tetromino
+ *
+ */
+
+.bloc {
+    position:absolute;
+    display:none;   /* switched to "block" in animation handler to prevent a display bug with Webkit */
+    left:120px;
+    top:-160px;     /* out of sight by default */
+    z-index:1;
+}
+#slider .bloc {
+    display:block;
+    left:0;
+}
+.bloc > div {
+    position:absolute;
+    width:12px;
+    height:12px;
+    border:14px solid #F9F9F9;
+}
+
+/*
+ *     _
+ *    |_|
+ *    |_|
+ *    |_|
+ *    |_|
+ */
+.I > div {
+    border-color:#F9F763 #EDE900 #EDE900 #F9F763;
+}
+.I {
+    width:160px;height:40px;
+}
+.I div:nth-child(1) {
+    left:40px;top:0;
+}
+.I div:nth-child(2) {
+    left:40px;top:40px;
+}
+.I div:nth-child(3) {
+    left:40px;top:80px;
+}
+.I div:nth-child(4) {
+    left:40px;top:120px;
+}
+
+/*
+ *  _
+ * |_|_ _
+ * |_|_|_|
+ *
+ */
+.J > div {
+    border-color:#F76565 #F40404 #F40404 #F76565;
+}
+.J {
+    width:120px;height:80px;
+}
+.J div:nth-child(1) {
+    left:0;top:0;
+}
+.J div:nth-child(2) {
+    left:0;top:40px;
+}
+.J div:nth-child(3) {
+    left:40px;top:40px;
+}
+.J div:nth-child(4) {
+    left:80px;top:40px;
+}
+
+/*
+ *      _
+ *  _ _|_|
+ * |_|_|_|
+ *
+ */
+.L > div {
+    border-color:#78D162 #25BC00 #25BC00 #78D162;
+}
+.L {
+    width:120px;height:80px;
+}
+.L div:nth-child(1) {
+    left:80px;top:0;
+}
+.L div:nth-child(2) {
+    left:0;top:40px;
+}
+.L div:nth-child(3) {
+    left:40px;top:40px;
+}
+.L div:nth-child(4) {
+    left:80px;top:40px;
+}
+
+/*
+ *  _ _
+ * |_|_|
+ * |_|_|
+ *
+ */
+.O > div {
+    border-color:#A662C4 #9608D3 #9608D3 #A662C4;
+}
+.O {
+    width:80px;height:80px;
+}
+.O div:nth-child(1) {
+    left:0;top:0;
+}
+.O div:nth-child(2) {
+    left:0;top:40px;
+}
+.O div:nth-child(3) {
+    left:40px;top:0;
+}
+.O div:nth-child(4) {
+    left:40px;top:40px;
+}
+
+/*
+ *  _ _
+ * |_|_|_
+ *   |_|_|
+ *
+ */
+.Z > div {
+    border-color:#75BFF4 #29A0F4 #29A0F4 #75BFF4;
+}
+.Z {
+    width:120px;height:80px;
+}
+.Z div:nth-child(1) {
+    left:0;top:0;
+}
+.Z div:nth-child(2) {
+    left:40px;top:0;
+}
+.Z div:nth-child(3) {
+    left:40px;top:40px;
+}
+.Z div:nth-child(4) {
+    left:80px;top:40px;
+}
+
+
+/* -----------------------------------------------------------------
+ *
+ *  Animation handlers
+ *
+ */
+#scene:hover .anim {
+    display:block;
+    -moz-animation-iteration-count:infinite;
+    -moz-animation-direction:normal;
+    -moz-animation-timing-function:linear;
+    -moz-animation-duration:20s;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-direction:normal;
+    -webkit-animation-timing-function:linear;
+    -webkit-animation-duration:20s;
+}
+#scene:hover #t1 {
+    -moz-transform-origin:50% 50%;
+    -moz-animation-name:t1;
+    -webkit-transform-origin:50% 50%;
+    -webkit-animation-name:t1;
+}
+#scene:hover #t2 {
+    -moz-animation-name:t2;
+    -webkit-animation-name:t2;
+}
+#scene:hover #t3 {
+    -moz-animation-name:t3;
+    -webkit-animation-name:t3;
+}
+#scene:hover #t4 {
+    -moz-animation-name:t4;
+    -webkit-animation-name:t4;
+}
+#scene:hover #t5 {
+    -moz-animation-name:t5;
+    -webkit-animation-name:t5;
+}
+#scene:hover #t6 {
+    -moz-animation-name:t6;
+    -webkit-animation-name:t6;
+}
+#scene:hover #t7 {
+    -moz-animation-name:t7;
+    -webkit-animation-name:t7;
+}
+#scene:hover #t8 {
+    -moz-animation-name:t8;
+    -webkit-animation-name:t8;
+}
+#scene:hover #t9 {
+    -moz-animation-name:t9;
+    -webkit-animation-name:t9;
+}
+#scene:hover #t10 {
+    -moz-animation-name:t10;
+    -webkit-animation-name:t10;
+}
+#scene:hover #blink {
+    -moz-animation-name:bl;
+    -webkit-animation-name:bl;
+}
+#scene:hover #slider {
+    -moz-animation-name:sl;
+    -webkit-animation-name:sl;
+}
+
+
+/* -----------------------------------------------------------------
+ *
+ *  Keyframes
+ *
+ *  Here are some values I used to build the timeline
+ *
+ *  complete animation      = 100%
+ *    - 10 falling blocks   = 95%
+ *      - 1 falling block   = 9.5%
+ *        - starting pause  = 1.5%
+ *        - moving          = 8%
+ *          - rotating      = 0.5% / 90°
+ *    - ending flashlight   = 5%
+ */
+
+@-moz-keyframes t1 {
+    /* appear */
+    from    {left:120px;top:0;}
+    /* pause */
+    1.499%  {}
+    1.5%    {top:0;}
+    /* rotate */
+    2.5%    {left:120px;-moz-transform:rotate(0deg);}
+    4%      {left:100px;-moz-transform:rotate(270deg);}
+    /* horizontal moving */
+    4.499%  {left:120px;}
+    4.5%    {left:140px;}
+    5.499%  {left:140px;}
+    5.5%    {left:180px;}
+    6.499%  {left:180px;}
+    6.5%    {left:220px;}
+    7.499%  {left:220px;}
+    7.5%    {left:260px;}
+    8.499%  {left:260px;}
+    8.5%    {left:300px;}
+    /* vertical moving */
+    9.5%    {top:460px;-moz-transform:rotate(270deg);}
+    to      {left:300px;top:460px;-moz-transform:rotate(270deg);}
+}
+
+@-webkit-keyframes t1 {
+    /* appear */
+    from    {left:120px;top:0;}
+    /* pause */
+    1.499%  {}
+    1.5%    {top:0;}
+    /* rotate */
+    2.5%    {left:120px;-webkit-transform:rotate(0deg);}
+    4%      {left:100px;-webkit-transform:rotate(270deg);}
+    /* horizontal moving */
+    4.499%  {left:120px;}
+    4.5%    {left:140px;}
+    5.499%  {left:140px;}
+    5.5%    {left:180px;}
+    6.499%  {left:180px;}
+    6.5%    {left:220px;}
+    7.499%  {left:220px;}
+    7.5%    {left:260px;}
+    8.499%  {left:260px;}
+    8.5%    {left:300px;}
+    /* vertical moving */
+    9.5%    {top:460px;}
+    to      {left:300px;top:460px;-webkit-transform:rotate(270deg);}
+}
+
+@-moz-keyframes t2 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    9.5%    {top:-160px;}
+    /* pause */
+    11%     {top:0;}
+    /* rotate */
+    13%     {left:120px;-moz-transform:rotate(0deg);}
+    13.5%   {left:140px;-moz-transform:rotate(-90deg);}
+    /* horizontal moving */
+    15.499% {left:140px;}
+    15.5%   {left:180px;}
+    16.499% {left:180px;}
+    16.5%   {left:220px;}
+    17.499% {left:220px;}
+    17.5%   {left:260px;}
+    /* vertical moving */
+    19%     {top:460px;-moz-transform:rotate(-90deg);}
+    to      {left:260px;top:460px;-moz-transform:rotate(-90deg);}
+}
+
+@-webkit-keyframes t2 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    9.5%    {top:-160px;}
+    /* pause */
+    11%     {top:0;}
+    /* rotate */
+    13%     {left:120px;-webkit-transform:rotate(0deg);}
+    13.5%   {left:140px;-webkit-transform:rotate(-90deg);}
+    /* horizontal moving */
+    15.499% {left:140px;}
+    15.5%   {left:180px;}
+    16.499% {left:180px;}
+    16.5%   {left:220px;}
+    17.499% {left:220px;}
+    17.5%   {left:260px;}
+    /* vertical moving */
+    19%     {top:460px;}
+    to      {left:260px;top:460px;-webkit-transform:rotate(-90deg);}
+}
+
+@-moz-keyframes t3 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    19%     {top:-160px;}
+    /* pause */
+    20.5%   {top:0;}
+    /* rotate */
+    23%     {left:120px;-moz-transform:rotate(0deg);}
+    23.5%   {left:100px;-moz-transform:rotate(90deg);}
+    /* horizontal moving */
+    25.499% {left:100px;}
+    25.5%   {left:60px;}
+    26.499% {left:60px;}
+    26.5%   {left:20px;}
+    27.499% {left:20px;}
+    27.5%   {left:-20px;}
+    /* vertical moving */
+    28.5%   {top:460px;}
+    to      {left:-20px;top:460px;-moz-transform:rotate(90deg);}
+}
+
+@-webkit-keyframes t3 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    19%     {top:-160px;}
+    /* pause */
+    20.5%   {top:0;}
+    /* rotate */
+    23%     {left:120px;-webkit-transform:rotate(0deg);}
+    23.5%   {left:100px;-webkit-transform:rotate(90deg);}
+    /* horizontal moving */
+    25.499% {left:100px;}
+    25.5%   {left:60px;}
+    26.499% {left:60px;}
+    26.5%   {left:20px;}
+    27.499% {left:20px;}
+    27.5%   {left:-20px;}
+    /* vertical moving */
+    28.5%   {top:460px;}
+    to      {left:-20px;top:460px;-webkit-transform:rotate(90deg);}
+}
+
+@-moz-keyframes t4 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    28.5%   {top:-160px;}
+    /* pause */
+    30%     {top:0;}
+    /* horizontal moving */
+    33.499% {left:120px}
+    33.5%   {left:80px;}
+    34.499% {left:80px;}
+    34.5%   {left:40px;}
+    /* vertical moving */
+    38%     {top:480px;}
+    to      {left:40px;top:480px;}
+}
+
+@-webkit-keyframes t4 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    28.5%   {top:-160px;}
+    /* pause */
+    30%     {top:0;}
+    /* horizontal moving */
+    33.499% {left:120px}
+    33.5%   {left:80px;}
+    34.499% {left:80px;}
+    34.5%   {left:40px;}
+    /* vertical moving */
+    38%     {top:480px;}
+    to      {left:40px;top:480px;}
+}
+
+@-moz-keyframes t5 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    38%     {top:-160px;}
+    /* pause */
+    39.5%   {top:0;}
+    /* rotate */
+    42.5%   {left:120px;-moz-transform:rotate(0deg);}
+    43%     {left:140px;-moz-transform:rotate(-90deg);}
+    /* vertical moving */
+    47.5%   {top:460px;}
+    to      {left:140px;top:460px;-moz-transform:rotate(-90deg);}
+}
+
+@-webkit-keyframes t5 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    38%     {top:-160px;}
+    /* pause */
+    39.5%   {top:0;}
+    /* rotate */
+    42.5%   {left:120px;-webkit-transform:rotate(0deg);}
+    43%     {left:140px;-webkit-transform:rotate(-90deg);}
+    /* vertical moving */
+    47.5%   {top:460px;}
+    to      {left:140px;top:460px;-webkit-transform:rotate(-90deg);}
+}
+
+@-moz-keyframes t6 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    47.5%   {top:-160px;}
+    /* pause */
+    49%     {left:120px;top:0;}
+    /* vertical moving */
+    57%     {top:440px;}
+    to      {left:120px;top:440px;}
+}
+
+@-webkit-keyframes t6 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    47.5%   {top:-160px;}
+    /* pause */
+    49%     {left:120px;top:0;}
+    /* vertical moving */
+    57%     {top:440px;}
+    to      {left:120px;top:440px;}
+}
+
+@-moz-keyframes t7 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    57%     {top:-160px;}
+    /* pause */
+    58.5%   {;top:0;}
+    /* horizontal moving */
+    59.499% {left:120px}
+    59.5%   {left:80px;}
+    62.499% {left:80px;}
+    62.5%   {left:40px;}
+    64.499% {left:40px;}
+    64.5%   {left:0;}
+    /* vertical moving */
+    66.5%   {top:400px;}
+    to      {left:0;top:400px;}
+}
+
+@-webkit-keyframes t7 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    57%     {top:-160px;}
+    /* pause */
+    58.5%   {top:0;}
+    /* horizontal moving */
+    59.499% {left:120px}
+    59.5%   {left:80px;}
+    62.499% {left:80px;}
+    62.5%   {left:40px;}
+    64.499% {left:40px;}
+    64.5%   {left:0;}
+    /* vertical moving */
+    66.5%   {top:400px;}
+    to      {left:0;top:400px;}
+}
+
+@-moz-keyframes t8 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    68%   {top:-160px;}
+    /* pause */
+    /*68%     {top:0;}*/
+    /* rotate */
+    69%     {left:120px;-moz-transform:rotate(0deg);}
+    69.5%   {left:100px;-moz-transform:rotate(-90deg);}
+    /* horizontal moving */
+    70.499% {left:100px}
+    70.5%   {left:60px;}
+    71.499% {left:60px}
+    71.5%   {left:20px;}
+    /* vertical moving */
+    76%     {top:380px;}
+    to      {left:20px;top:380px;-moz-transform:rotate(-90deg);}
+}
+
+@-webkit-keyframes t8 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    68%   {top:-160px;}
+    /* pause */
+    /*68%     {top:0;}*/
+    /* rotate */
+    69%     {left:120px;-webkit-transform:rotate(0deg);}
+    69.5%   {left:100px;-webkit-transform:rotate(-90deg);}
+    /* horizontal moving */
+    70.499% {left:100px}
+    70.5%   {left:60px;}
+    71.499% {left:60px}
+    71.5%   {left:20px;}
+    /* vertical moving */
+    76%     {top:380px;}
+    to      {left:20px;top:380px;-webkit-transform:rotate(-90deg);}
+}
+
+@-moz-keyframes t9 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    76%     {top:-160px;}
+    /* pause */
+    77.5%   {top:0;}
+    /* rotate */
+    79%     {-moz-transform:rotate(0deg);}
+    80%     {-moz-transform:rotate(180deg);}
+    /* horizontal moving */
+    80.499% {left:120px;}
+    80.5%   {left:160px;}
+    82.499% {left:160px;}
+    82.5%   {left:200px;}
+    83.499% {left:200px;}
+    83.5%   {left:240px;}
+    84%     {left:240px;}
+    84.5%   {left:280px;}
+    /* vertical moving */
+    85.5%   {top:400px;}
+    to      {left:280px;top:400px;-moz-transform:rotate(180deg);}
+}
+
+@-webkit-keyframes t9 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    76%     {top:-160px;}
+    /* pause */
+    77.5%   {top:0;}
+    /* rotate */
+    79%     {-webkit-transform:rotate(0deg);}
+    80%     {-webkit-transform:rotate(180deg);}
+    /* horizontal moving */
+    80.499% {left:120px;}
+    80.5%   {left:160px;}
+    82.499% {left:160px;}
+    82.5%   {left:200px;}
+    83.499% {left:200px;}
+    83.5%   {left:240px;}
+    84%     {left:240px;}
+    84.5%   {left:280px;}
+    /* vertical moving */
+    85.5%   {top:400px;}
+    to      {left:280px;top:400px;-webkit-transform:rotate(180deg);}
+}
+
+@-moz-keyframes t10 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    85.5%   {top:-160px;}
+    /* pause */
+    87%     {top:0;}
+    /* rotate */
+    89.499% {left:120px;}
+    89.5%   {left:160px;}
+    /* horizontal moving */
+    91.499% {left:160px;}
+    91.5%   {left:200px;}
+    /* vertical moving */
+    95%     {top:400px;}
+    to      {left:200px;top:400px;}
+}
+
+@-webkit-keyframes t10 {
+    /* hide */
+    from    {left:120px;top-160px;}
+    /* appear */
+    85.5%   {top:-160px;}
+    /* pause */
+    87%     {top:0;}
+    /* rotate */
+    89.499% {left:120px;}
+    89.5%   {left:160px;}
+    /* horizontal moving */
+    91.499% {left:160px;}
+    91.5%   {left:200px;}
+    /* vertical moving */
+    95%     {top:400px;}
+    to      {left:200px;top:400px;}
+}
+
+@-moz-keyframes bl {
+    from    {background-color:transparent;}
+    /* blink */
+    95.498% {background-color:transparent;}
+    95.499% {background-color:white;}
+    95.5%   {background-color:yellow;}
+    97.499% {background-color:yellow;}
+    97.5%   {background-color:white;}
+    98.499% {background-color:white;}
+    98.5%   {background-color:yellow;}
+    to      {background-color:yellow;}
+}
+
+@-webkit-keyframes bl {
+    from    {background-color:transparent;}
+    /* blink */
+    95.498% {background-color:transparent;}
+    95.499% {background-color:white;}
+    95.5%   {background-color:yellow;}
+    97.499% {background-color:yellow;}
+    97.5%   {background-color:white;}
+    98.499% {background-color:white;}
+    98.5%   {background-color:yellow;}
+    to      {background-color:yellow;}
+}
+
+@-moz-keyframes sl {
+    from    {top:0;}
+    9.499%  {top:0;}
+    9.5%    {top:-160px;}
+    18.999% {top:-160px;}
+    19%     {top:-320px;}
+    28.499% {top:-320px;}
+    28.5%   {top:-480px;}
+    37.999% {top:-480px;}
+    38%     {top:-640px;}
+    47.499% {top:-640px;}
+    47.5%   {top:-800px;}
+    56.999% {top:-800px;}
+    57%     {top:-960px;}
+    66.499% {top:-960px;}
+    66.5%   {top:-1120px;}
+    75.999% {top:-1120px;}
+    76%     {top:-1280px;}
+    85.499% {top:-1280px;}
+    85.5%   {top:-1440px;}
+    to      {top:-1440px;}
+}
+
+@-webkit-keyframes sl {
+    from    {top:0;}
+    9.499%  {top:0;}
+    9.5%    {top:-160px;}
+    18.999% {top:-160px;}
+    19%     {top:-320px;}
+    28.499% {top:-320px;}
+    28.5%   {top:-480px;}
+    37.999% {top:-480px;}
+    38%     {top:-640px;}
+    47.499% {top:-640px;}
+    47.5%   {top:-800px;}
+    56.999% {top:-800px;}
+    57%     {top:-960px;}
+    66.499% {top:-960px;}
+    66.5%   {top:-1120px;}
+    75.999% {top:-1120px;}
+    76%     {top:-1280px;}
+    85.499% {top:-1280px;}
+    85.5%   {top:-1440px;}
+    to      {top:-1440px;}
+}
+</style>
+</head>
+<body>
+<div id="scene">
+
+    <div class="frame h">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <div class="frame v">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <div id="game">
+        <div id="t1" class="bloc J anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t2" class="bloc Z anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t3" class="bloc L anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t4" class="bloc Z anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t5" class="bloc J anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t6" class="bloc O anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t7" class="bloc Z anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t8" class="bloc I anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t9" class="bloc L anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="t10" class="bloc I anim">
+            <div></div><div></div><div></div><div></div>
+        </div>
+        <div id="blink" class="anim"></div>
+    </div>
+
+    <div class="frame v">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <div id="next">
+        <div id="cache">
+            <div id="slider" class="anim">
+                <div class="bloc Z" style="top:0px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc L" style="top:160px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc Z" style="top:320px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc J" style="top:480px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc O" style="top:640px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc Z" style="top:800px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc I" style="top:960px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc L" style="top:1120px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc I" style="top:1280px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+                <div class="bloc J" style="top:1440px;">
+                    <div></div><div></div><div></div><div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="frame v">
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <div class="frame h">
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <div id="info">
+    <h1>Tetris CSS3</h1>
+    <p></p>tribute to <a href="http://en.wikipedia.org/wiki/Alexey_Pajitnov" title="Aleksei Pajitnov">Aleksei Pajitnov</a>
+    by <a href="http://www.geoffray.be" title="Geoffray Warnants">Geoffray Warnants</a></p>
+    <p>No Javascript,<br />no pictures,<br />just CSS3 !</p>
+    <p>Works with<br />Firefox 5, Safari or Chrome</p>
+    </div>
+
+    <div class="frame v">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <div class="frame h">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-3342254-9']);
+_gaq.push(['_trackPageview']);
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+</body>
+</html>
+

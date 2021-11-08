@@ -1,0 +1,12 @@
+<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div id="clickme">Click here</div>
+<img id="pic" src="1.jpg">
+<script>
+$("#clickme").click(function(){
+  $("#pic").fadeOut("slow",function(){
+    var i=Math.floor((Math.random()*3)+1); //1,2,3
+    $("#pic").attr("src",i+".jpg");
+  });
+  $("#pic").fadeIn();
+});
+</script>

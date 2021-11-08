@@ -1,0 +1,17 @@
+<script>
+var i=10;
+var str='cold and lonely';
+var animals=['cat','dog','panda'];
+var tel={'suling':63097, 'tren':63104}
+for(i=0; i<str.length; i++){
+ console.log(str[i]);
+ if(i<animals.length){
+  alert(i+animals[i]);
+ }
+}
+console.log(i)
+function print(s1,s2){ 
+ document.write(s1+' '+s2+"<br>");
+}
+for(i in tel){ print(i,tel[i]); }
+</script>

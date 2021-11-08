@@ -1,0 +1,10 @@
+Press something! You press <span id=key>N/A</span>.
+<script>
+var f=document.getElementById("key")
+document.onkeydown = function(e){
+   var e=e || event
+   f.innerHTML=String.fromCharCode(e.keyCode)
+   if(e.keyCode==49)
+   f.innerHTML+=" Great!"
+}
+</script>
