@@ -5,8 +5,8 @@ function print(s){
  deltaT=t2-t1;
  document.write(deltaT+' '+s+"<br>");
 }
-setTimeout("print('test1');",3000)
+setTimeout("print('test1');",3000)  // called once after 3000 ms 
 setTimeout("print('test2');",6000)
-var timer=setInterval(function(){print('test3');}, 2000);
-setTimeout("clearInterval(timer)",10000)
+var timer=setInterval(function(){print('test3');}, 2000);  // called repeatedly
+setTimeout("clearInterval(timer)",10000)  // stop timer after 10000 ms
 </script>

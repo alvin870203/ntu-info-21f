@@ -5,6 +5,6 @@ Press something! Your RT is <span id=rt>N/A</span>.
    document.onkeydown = function(e){
    var e=e || event
    endTime = new Date().getTime();
-   r.innerHTML=(endTime-startTime)/1000
+   r.innerHTML=(endTime-startTime)/1000  // getTime is measured in ms.
 }  
 </script>
