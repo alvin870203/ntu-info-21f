@@ -1,0 +1,54 @@
+<script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script>
+var order = new Array(1,2,3,4);
+var current = 0; //current trial
+
+$(document).ready(function(){
+ ShowTrial(current);
+});
+
+function ShowTrial(t) {
+ $("#page" + order[t]).show();
+ var N = t+1; //counting from 1
+ $(".progress").text('('+N+'/'+order.length+')');
+}
+
+function NextTrial() {
+ $("#page" + order[current]).hide();
+ current++;
+ ShowTrial(current);
+}
+</script>
+
+<style> .page {display: none;} </style> 
+
+Please indicate the sex of this face:
+
+<div class="page" id="page1">
+<img src=1.jpg><br>
+<input type=radio name=f1 value=M> M
+<input type=radio name=f1 value=F> F <br>
+<a href="javascript:NextTrial()">Next</a> 
+<span class="progress"></span>
+</div>
+
+<div class="page" id="page2">
+<img src=2.jpg><br>
+<input type=radio name=f2 value=M> M
+<input type=radio name=f2 value=F> F <br>
+<a href="javascript:NextTrial()">Next</a> 
+<span class="progress"></span>
+</div>
+
+<div class="page" id="page3">
+<img src=3.jpg><br>
+<input type=radio name=f3 value=M> M
+<input type=radio name=f3 value=F> F <br>
+<a href="javascript:NextTrial()">Next</a> 
+<span class="progress"></span>
+</div>
+
+<div class="page" id="page4">
+<h3>All done! Thanks!</h3>
+</div>
