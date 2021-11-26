@@ -1,0 +1,51 @@
+<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var order = new Array(1, 2, 3, 4);
+    var current = 0; //current trial
+
+    var sex_ans = ['M', 'M', 'F']; // sex ground truth of images
+    var correct = 0; // how many user's answears are correct
+
+    $(document).ready(function () {
+        ShowTrial(current);
+    });
+
+    function ShowTrial(t) {
+        $("#page" + order[t]).show();
+        var N = t + 1; //counting from 1
+        $(".progress").text('(' + N + '/' + order.length + ')');
+    }
+
+    function NextTrial() {
+        var sex = $('input[name=f' + (current + 1) + ']:checked').val(); // get whether M or F is chosen
+        if (sex == sex_ans[current]) {
+            correct++; // add 1 if user's answear is the same as ground truth
+        }
+        $("#acc").text("Accuracy: " + (correct / (current + 1))); // record accuracy to page4
+        $("#page" + order[current]).hide();
+        current++;
+        ShowTrial(current);
+    }
+
+    var pageContent = ''
+    for (let page_num = 1; page_num < order.length + 1; page_num++) { // for loop to define page1~4
+        if (page_num == 4) { // html for page4
+            pageContent = '<h3>All done! Thanks!</h3>'
+                        + '<h3 id=acc></h3>';
+        } else { // html for page1~3
+            pageContent = 'Please indicate the sex of this face:<br>'
+                                + '<img src=' + page_num + '.jpg><br>'
+                                + '<input type=radio name=f' + page_num + ' value=M> M'
+                                + '<input type=radio name=f' + page_num + ' value=F> F <br>'
+                                + '<a href="javascript:NextTrial()">Next</a>'
+                        + '<span class="progress"></span>';
+        }
+
+        document.write( // document.write all pages
+            '<div class="page" id="page' + page_num + '" style="display: none;">' // initially set to none display
+                + pageContent
+            + '</div>'
+        );
+    }
+</script>
